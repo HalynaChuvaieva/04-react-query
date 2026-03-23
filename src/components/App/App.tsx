@@ -9,7 +9,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import MovieModal from '../MovieModal/MovieModal'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import Pagination from '../Pagination/Pagination'
-
+import { Toaster } from 'react-hot-toast'
 export default function App() {
     const [topic, setTopic] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
