@@ -9,7 +9,7 @@ import Loader from '../Loader/Loader'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import MovieModal from '../MovieModal/MovieModal'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
-import ReactPaginate from 'react-paginate'
+import Pagination from '../Pagination/Pagination'
 
 export default function App() {
     const [topic, setTopic] = useState('');
@@ -31,37 +31,16 @@ export default function App() {
             placeholderData: keepPreviousData,
     });
     const totalPages = data?.total_pages || 0;
-    const handleSubmit = async (formData: FormData) => {
-
-        const query = formData.get("query") as string;
-        
-        if (!query.trim()) {
-            toast.error("Please enter your search query.");
-            return;
-        }
-        
+    const handleSubmit = async (query: string) => {
         setTopic(query);
         setCurrentPage(1);
-        
     }
 
     return (
         <div className={css.app}>
             <Toaster />
             <SearchBar onSubmit={handleSubmit} />
-            {totalPages > 1 && (
-              <ReactPaginate
-                pageCount={totalPages}
-                pageRangeDisplayed={5}
-                marginPagesDisplayed={1}
-                onPageChange={({ selected }) => setCurrentPage(selected + 1)}
-                forcePage={currentPage - 1}
-                containerClassName={css.pagination}
-                activeClassName={css.active}
-                nextLabel="→"
-                previousLabel="←"
-              />
-            )}
+            {totalPages > 1 && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={(page) => setCurrentPage(page)} />}
 
             {isLoading && <Loader />}
             {isError && <ErrorMessage/>}
