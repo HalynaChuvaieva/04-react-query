@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import css from './App.module.css'
 import SearchBar  from '../SearchBar/SearchBar'
 import fetchMovie from '../../services/movieService'
@@ -9,7 +9,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import MovieModal from '../MovieModal/MovieModal'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import Pagination from '../Pagination/Pagination'
-import { Toaster } from 'react-hot-toast'
+import { Toaster, toast } from 'react-hot-toast'
 export default function App() {
     const [topic, setTopic] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -30,6 +30,13 @@ export default function App() {
             placeholderData: keepPreviousData,
     });
     const totalPages = data?.total_pages || 0;
+
+    useEffect(() => {
+        if (isSuccess && data && data.results.length === 0) {
+            toast('No movies found for your request.');
+        }
+    }, [isSuccess, data]);
+
     const handleSubmit = async (query: string) => {
         setTopic(query);
         setCurrentPage(1);
